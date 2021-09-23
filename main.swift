@@ -9,7 +9,7 @@ import Foundation
 
 //Day 5　9月19日の勉強
 //프로그래머스 위장 swift
-//Programmers Disguise (Swift)
+//Programmers High Score Kit - Hash _Disguise (Swift)
 func solution(_ clothes:[[String]]) -> Int {
     var dic = [String:[String]]()
     for c in clothes{
@@ -50,7 +50,7 @@ for j in 0..<asiaKuni.count {
 }
 
 //프로그래머스 베스트앨범 swift 고득점Kit
-//Programmers BestAlbum (Swift)
+//Programmers High Score Kit - Hash _BestAlbum (Swift)
 
 func solution(_ genres: [String], _ plays: [Int]) -> [Int] {
     var genrePlay: [String:Int] = [:]
@@ -104,3 +104,51 @@ func solution(_ genres: [String], _ plays: [Int]) -> [Int] {
 
 
 print(solution(["classic", "pop", "classic", "classic", "pop"], [500, 600, 150, 800, 2500]))
+
+//Day6
+//Programmers High Score Kit - Stack/Queue _機能開発 (Swift)
+//프로그래머스 고득점 Kit - 스택/큐 _ 기능개발
+
+func solution(_ progresses:[Int], _ speeds:[Int]) -> [Int] {
+    var progress = progresses
+    var eachSpeed = speeds
+    var answer: [Int] = []
+    var releaseIdx = 0
+
+    //while문을 이용하여, 작업의 진도를 나타내는 progress의 배열이 비어있지 않을 동안 반복해준다.
+    // 만약, progress 배열의 첫번째 요소가 100을 넘지 않는다면, for in 반복문을 이용하여, 동시에 각 작업 진도에 각 작업속도를 더하는 작업을 한다. 동시에 하는 이유는, 하루라는 시간은 작업의 개수와 작업의 속도와 관계없이 똑같이 흐르기에, 1일이 지날때마다의 각 작업진도의 상황을 각 작업의 속도를 더함으로서 갱신시키기 위해서이다.
+    // 첫번째 요소가 100을 넘지 않을 동안, 두번째나 그 뒤의 요소가 100을 넘더라도 계속 진행속도를 더해준다.
+    while progress.isEmpty == false {
+        if progress.first! < 100 {
+            for i in 0..<progress.count {
+                progress[i] += eachSpeed[i]
+            }
+
+            if releaseIdx > 0 {
+                answer.append(releaseIdx)
+                releaseIdx = 0
+            }
+        } else {
+            progress.removeFirst()
+            eachSpeed.removeFirst()
+            releaseIdx += 1
+        }
+        // 위에서의 else문은, 첫번째 요소가 100 이상이 될 경우, 첫번째 요소의 작업 진도와 작업 속도를 배열에서 지움으로서, 두번째 요소가 첫번째요소로, 세번째 요소가 두번째 요소로 각각 인덱스를 앞으로 당기는 작업을 한다. 그리고 배포하는 기능의 수 = releaseIdx(완료된 작업의 수)를 1씩 더해준다. 이는, 작업이 100이 되어 완료가 될 경우, 배포를 하기 때문이다.
+        // 첫번째 요소가 지워지면, 두번째 요소가 progress.first 가 되어, for문을 반복한다. 이때, 두번째 요소도 이미 100을 넘어 완료된 상태라면, 작업이 100이 되어 배포 준비가 된상태이기에, 다시 한번, 배포하는 기능의 수를 1을 더해준다. 만약, 두번째 요소가 아직 100을 넘지 못한 상태라면, for 문을 통해, 두번째 요소가 100이 될때까지 각 작업의 진행속도를 더하는 작업이 반복된다. 그리고 배포하는 기능의 수가 0을 넘었으므로, if releaseIdx > 0의 작업을 진행하여, answer라는 배열에 releaseIdx의 숫자값을 입력하게 된다. 여기서, releaseIdx를 0으로 다시 초기화 시켜주는 이유는, 0으로 초기화 시켜주지 않으면, 배포하는 기능의 수인 releaseIdx에 계속 플러스 1씩 되기 때문이다.
+    }
+ 
+    if releaseIdx > 0 {
+        answer.append(releaseIdx)
+    }
+    // 배열안의 작업의 수(요소)가 모두 없어질 경우, 가장 마지막의 작업의 배포가능한 기능의 수를 처리해야 한다. 마지막요소의 작업이 완료되어 배포가능하기 때문에, 배포가능한 기능의 수를 answer이라는 배열에 입력해야 되기에, 위에서의 if문과 같은 알고리즘을 작성해주었다.
+   
+    return answer
+}
+
+print(solution([93, 30, 55], [1, 30, 5]))
+print(solution([95, 90, 99, 99, 80, 99], [1, 1, 1, 1, 1, 1]))
+
+//Day 7
+//Programmers High Score Kit - Stack/Queue _プリンター (Swift)
+//프로그래머스 고득점 Kit - 스택/큐 _ 프린터
+
