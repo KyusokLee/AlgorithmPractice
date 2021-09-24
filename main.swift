@@ -152,3 +152,75 @@ print(solution([95, 90, 99, 99, 80, 99], [1, 1, 1, 1, 1, 1]))
 //Programmers High Score Kit - Stack/Queue _プリンター (Swift)
 //프로그래머스 고득점 Kit - 스택/큐 _ 프린터
 
+func solution(_ priorities:[Int], _ location:Int) -> Int {
+    var priority = priorities
+    let index = location
+    var waitList: [(Int, Int)] = []
+    // 인덱스랑 우선순위가 같이 저장되는 큐를 생성
+    var result = 0
+    var idxAndPri: [(Int, Int)] = []
+    
+    for k in 0..<priority.count {
+        idxAndPri[k].0 = k
+        idxAndPri[k].1 = priority[k]
+    }
+
+    for i in 0..<priority.count {
+        waitList[i].0 = i
+    }
+
+    while priority.isEmpty == false {
+        for j in 0..<priority.count {
+            if priority.first! == priority.max() {
+                waitList[j].1 = priority.first!
+                priority.removeFirst()
+            } else {
+            priority.append(priority.first!)
+            priority.removeFirst()
+            }
+        }
+    }
+    
+    if waitList.isEmpty == false {
+        for d in 0..<waitList.count {
+        }
+    }
+
+    
+    return result
+}
+
+//print(solution([2, 1, 3, 2], 2)) >>>> A value of this return is 1
+// [1, 3, 2, 2] >> [3, 2, 2, 1] >> [2, 2, 1]
+//waitList = [3, 2, 2, 1]
+
+// if print(solution([1, 2, 3, 2], 2))
+// priority배열 : [1, 2, 3, 2] >> [2, 3, 2, 1] >> [3, 2, 1, 2] >> [2, 1, 2] >> [1, 2] >> [2, 1]
+// waitList배열 : [          ] >> [          ] >> [3         ] >> [3, 2   ] >> [3, 2] >> [3, 2, 2] >> [3(2번째 요소꺼), 2(1번째 요소꺼), 2(3번째 요소꺼), 1(0번째 요소꺼)]
+//
+//func solution(_ priorities:[Int], _ location:Int) -> Int {
+//    var queue: [(Int, Int)] = []
+//    var priorityQueue = priorities.sorted(by : >)
+//    var result = 0
+//
+//    priorities.enumerated().forEach { (index, property) in
+//        queue.append((index, property))
+//    }
+//
+//    while !queue.isEmpty {
+//        if queue.first!.1 == priorityQueue.first! {
+//            if queue.first!.0  == location {
+//                return result + 1
+//            }
+//            result += 1
+//            queue.removeFirst()
+//            priorityQueue.removeFirst()
+//        } else {
+//            queue.append(queue.removeFirst())
+//        }
+//    }
+//
+//    return result
+//}
+//
+//print(solution([2, 1, 3, 2], 2))
