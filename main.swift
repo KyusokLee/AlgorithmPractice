@@ -154,35 +154,33 @@ print(solution([95, 90, 99, 99, 80, 99], [1, 1, 1, 1, 1, 1]))
 
 func solution(_ priorities:[Int], _ location:Int) -> Int {
     var priority = priorities
-    let index = location
-    var waitList: [(Int, Int)] = []
-    // 인덱스랑 우선순위가 같이 저장되는 큐를 생성
+    let requIndex = location
+    var waitList: [(index: Int, priority: Int)] = []
+    var print: [(Int, Int)] = []
+    // 인덱스랑 우선순위가 같이 저장되는 튜플을 생성
     var result = 0
-    var idxAndPri: [(Int, Int)] = []
     
-    for k in 0..<priority.count {
-        idxAndPri[k].0 = k
-        idxAndPri[k].1 = priority[k]
+    priority.enumerated().forEach { (index, property) in
+        waitList.append((index, property))
     }
-
-    for i in 0..<priority.count {
-        waitList[i].0 = i
-    }
+    //열거형과 foreach를 이용하여 waitList에 대입한다.
 
     while priority.isEmpty == false {
-        for j in 0..<priority.count {
-            if priority.first! == priority.max() {
-                waitList[j].1 = priority.first!
-                priority.removeFirst()
-            } else {
+        if priority.first! == priority.max() {
+            priority.removeFirst()
+            print.append(waitList.first!)
+            waitList.removeFirst()
+        } else {
             priority.append(priority.first!)
             priority.removeFirst()
-            }
+            waitList.append(waitList.first!)
+            waitList.removeFirst()
         }
     }
     
-    if waitList.isEmpty == false {
-        for d in 0..<waitList.count {
+    for j in 0..<print.count {
+        if print[j].0 == requIndex {
+            result = j + 1
         }
     }
 
@@ -190,13 +188,16 @@ func solution(_ priorities:[Int], _ location:Int) -> Int {
     return result
 }
 
+print(solution([2, 1, 3, 2], 2))
+print(solution([1, 1, 9, 1, 1, 1], 0))
+
 //print(solution([2, 1, 3, 2], 2)) >>>> A value of this return is 1
 // [1, 3, 2, 2] >> [3, 2, 2, 1] >> [2, 2, 1]
 //waitList = [3, 2, 2, 1]
 
 // if print(solution([1, 2, 3, 2], 2))
 // priority배열 : [1, 2, 3, 2] >> [2, 3, 2, 1] >> [3, 2, 1, 2] >> [2, 1, 2] >> [1, 2] >> [2, 1]
-// waitList배열 : [          ] >> [          ] >> [3         ] >> [3, 2   ] >> [3, 2] >> [3, 2, 2] >> [3(2번째 요소꺼), 2(1번째 요소꺼), 2(3번째 요소꺼), 1(0번째 요소꺼)]
+// waitList배열 : [(0, 1), (1, 2), (2, 3), (3, 2)] >> [          ] >> [3         ] >> [3, 2   ] >> [3, 2] >> [3, 2, 2] >> [3(2번째 요소꺼), 2(1번째 요소꺼), 2(3번째 요소꺼), 1(0번째 요소꺼)]
 //
 //func solution(_ priorities:[Int], _ location:Int) -> Int {
 //    var queue: [(Int, Int)] = []
