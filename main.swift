@@ -225,3 +225,82 @@ print(solution([1, 1, 9, 1, 1, 1], 0))
 //}
 //
 //print(solution([2, 1, 3, 2], 2))
+
+//Day 8
+//Programmers High Score Kit - Stack/Queue _橋を走るトラック (Swift)
+//프로그래머스 고득점 Kit - 스택/큐 _ 다리를 지나는 트럭 (Swift)
+
+//トラックは１秒で１を移動する
+//트럭은 1초에 1만큼 움직인다.
+//트럭 여러 대가 강을 가로지르는 일차선 다리를 정해진 순으로 건너려 합니다. 모든 트럭이 다리를 건너려면 최소 몇 초가 걸리는지 알아내야 합니다. 다리에는 트럭이 최대 bridge_length대 올라갈 수 있으며, 다리는 weight 이하까지의 무게를 견딜 수 있습니다. 단, 다리에 완전히 오르지 않은 트럭의 무게는 무시합니다.
+//예를 들어, 트럭 2대가 올라갈 수 있고 무게를 10kg까지 견디는 다리가 있습니다. 무게가 [7, 4, 5, 6]kg인 트럭이 순서대로 최단 시간 안에 다리를 건너려면 다음과 같이 건너야 합니다.
+
+func solution(_ bridge_length:Int, _ weight:Int, _ truck_weights:[Int]) -> Int {
+    var bridge = Array(repeating: 0, count: bridge_length)
+    var truck = truck_weights
+    var sec = 0
+    var addedWei = 0
+
+    //알고리즘 해석 : bridge 라는 요소가 전부 0이며 그 요소의 수가 다리의 길이만큼 반복되는 배열을 만들어준다. 이것은, 트럭이 bridge 라는 배열의 뒤에서부터 다리에 들어오기 시작함을 나타내주기 위해서이다. 만약, 예를 들어 다리의 길이가 3이고 첫번째로 들어올 트럭의 무게가 7이면, [0, 0, 0] 이었던것이 [0, 0, 7] 이 됨. 이유는, 아래의 nowBridgeWei 부분에서 설명!
+    //변수이름.isEmpty앞에 !를 붙이는 것은 그값이 false이면을 나타내는 것!
+    // 즉 아래의 !bridge.isEmpty 의 뜻은, bridge.isEmpty == false 의 의미와 같다!
+    while !bridge.isEmpty {
+        sec += 1
+        addedWei -= bridge.removeFirst()
+        //위의 문법을 작성함으로서, 시간은 while문을 반복할 동안 1초씩 지나가게 되고, bridge 의 첫번째 요소를 지워주며, 현재 다리의 무게를 나타내는 addedWei 에 다리의 첫번째 요소의 값을 반복하여 빼준 값이 대입된다. 예를들어, 다리의 길이가 3이라면, 현재의 bridge 배열은 [0, 0, 0]로 된다. addedWei -= bridge.removeFirst() 을 해줌으로서, bridge 배열의 첫번째 요소 0을 지우고, 뒤에 트럭이 들어올 공간을 마련하게 된다. 또한, bridge 의 첫번째 요소를 지워줌과 동시에, 현재의 다리위에 달리고 있는 트럭의 무게 addedWei에 지워준 요소의 값을 계속해서 빼준 값이 대입되게 된다. 즉, 현재의 상태에서는 0이 대입되게 된다.
+        if let firstTruck = truck.first {
+            if firstTruck + addedWei <= weight {
+                addedWei += truck.removeFirst()
+                bridge.append(firstTruck)
+            } else {
+                bridge.append(0)
+            }
+        }
+    }
+    
+    return sec
+}
+
+print(solution(2, 10, [7, 4, 5, 6]))
+//위의 경우, 처음에 [0, 0]이라는 bridge배열이 만들어지고, sec = 1이 되고, addedWei = 0 - 0 = 0이 됨과 동시에, bridge의 배열에서의 첫번째 요소를 지워주는 작업을 함으로서 if let문이 시작된다. 즉, 이 단계에서는 bridge의 배열은 [0]하나만 갖게 된다. if let 문의 특성상, 다리는 건너려고 하는 트럭들의 배열, truck에 요소가 존재할때만, if let 문이 시작되게 된다. 먼저, truck.first의 값이 7로서 존재하므로, if let문의 이하의 문법이 시작됨. if let문안의 if는 지나가려고 하는 트럭의 무게와 다리위에 추가된 무게addedWei의 덧셈값이 다리가 버틸 수 있는 무게를 나타내는 weight보다 작을 시에만 실행되게 된다. 현재의 경우, 7 + 0 <= 10이므로 addedWei에 다리를 지나가려고 하는 첫번째 트럭의 무게를 더해주는 작업을 한다. 그리고, bridge라는 배열의 마지막에 다리를 지나가려고 하는 첫번째 트럭의 무게를 더해준다. 여기서 이 작업의 뜻은, 현재 다리 위에 무게7의 트럭이 존재한다는 것을 의미한다. 여기까지의 단계를 체크해보면, bridge 라는 배열에는 [0, 7]이 존재하고, addedWei는 7, truck의 배열에는 7이 없어진 [4, 5, 6]이 존재하게 된다.if let문이 끝나게 되고, 다시 while문의 첫 번째 문장으로 올라간다. 아래부터는, 단계별로의 상황을 나타내고자 한다.
+// 반복(1)번째
+//  while문: sec: 0 + 1 = 1   bridge: [0, 0]  >> [0]    addedWei: 0 - 0 = 0
+//     if let문:    bridge: [0] >> [0, 7]     addedWei = 0 + 7 = 7    truck:[7,4,5,6] >> [4,5,6]
+// 반복(2)번째
+//  while문: sec: 1 + 1 = 2   bridge: [0, 7]  >> [7]    addedWei: 7 - 0 = 7
+//     if let문:    7 + 4 <= 10이 거짓이므로 else문이 진행 >> bridge: [7] >> [7, 0]
+// 반복(3)번째
+//  while문: sec: 2 + 1 = 3   bridge: [7, 0]  >> [0]    addedWei: 7 - 7 = 0
+//     if let문:    4 + 0 <= 10이 참이므로 if문이 진행
+//                 addedWei: 0 + 4 = 4   truck:[4,5,6] >> [5, 6]  bridge: [0, 4]
+// 반복(4)번째
+//  while문: sec: 3 + 1 = 4   bridge: [0, 4]  >> [4]    addedWei: 4 - 0 = 4
+//     if let문:    4 + 5 <= 10이 참이므로 if문이 진행
+//                 addedWei: 4 + 5 = 9   truck:[5,6] >> [6]       bridge: [4, 5]
+// 반복(5)번째
+//  while문: sec: 4 + 1 = 5   bridge: [4, 5]  >> [5]    addedWei: 9 - 4 = 5
+//     if let문:    6 + 5 <= 10이 거짓이므로 else문이 진행 >> bridge: [5] >> [5, 0]
+// 반복(6)번째
+//  while문: sec: 5 + 1 = 6   bridge: [5, 0]  >> [0]    addedWei: 5 - 5 = 0
+//     if let문:    0 + 6 <= 10이 참이므로 if문이 진행
+//                 addedWei: 0 + 6 = 6   truck:[6] >> []          bridge: [0, 6]
+// 반복(7)번째
+//  while문: sec: 6 + 1 = 7   bridge: [0, 6]  >> [6]    addedWei: 6 - 0 = 6
+//     더 이상 truck안의 요소가 없으므로 if let문 진행 불가
+// 반복(8)번째
+//  while문: sec: 7 + 1 = 8   bridge: [6] >> []         addedWei: 6 - 6 = 0
+//     더 이상 truck안의 요소가 없으므로 if let문 진행 불가
+// 반복(9)번째
+//  bridge안의 요소가 없음(빈 배열)이 되었으모로 while문 진행 불가! >> 그대로 함수가 sec: 8을 리턴하고 종료됨
+
+// 이하는, 알고리즘의 이해를 돕기위해 진행한 알고리즘 연습(개인공부용)
+var a = [1, 3, 5, 7]
+var b: [Int] = []
+var i = 0
+i = a.remove(at: 1)
+//여기서의 i는 a라는 배열에서 지운 위치의 값이 대입되게 된다.
+//즉, 예를 들어, a라는 배열에서 3을 지웠으면, i = 3이 되게되며, 또한 a라는 배열에서 7을 지웠으면 i = 7이 된다.
+print(a)
+print(i)
+b.append(0)
+print(b)
