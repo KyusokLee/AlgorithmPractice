@@ -361,3 +361,94 @@ print(sortedArray3) //[[0, 1], [2, 4], [2, 5], [3, 2], [5, 7]] 출력됨
 //위의 sortedArray3 설명: $0 과 $1을 비교함으로서 요소마다 돌면서 정렬을 해주게 되는데, $0은 비교하려고 하는 요소, $1은 비교대상의 요소를 뜻함. 여기서 $0[0]을 써준 이유는 애초에, 위에서 arrayKyu라는 배열이 2중배열이기 때문에, $0[0]은 요소의 2중배열안의 첫번째 것을 뜻함. 예를 들면, [[0, 1], [3, 7]]이면 $0[0]은 0, $1[0]은 3, $0[1]은 1, $1[1]은 7이 된다. 여기서의 물음표는 if문과 같은 의미를 갖는다.
 // 추가적으로 설명하자면, (A) == (B) ? C : D 가 있다고 치면, A가 B와 같다면 왼쪽의 C를 실행, 아니라면 오른쪽의 D를 실행한다. 여기서는 sorted함수를 적었으므로, 배열의 각 요소들을 돌면서 정렬해주는 이른바 반복문과 같은 알고리즘인 셈이다.
 // 추가적으로, <는 오름차순 정렬(ex):  0 >>> 3 >>>>> 7 >>> 10) >는 내림차순 정렬 (ex: 10 >>> 7 >>> 3 >> 0)
+
+//Day 10
+//Programmers High Score Kit - Heap _ディスクコントローラー (Swift)
+//프로그래머스 고득점 Kit - 힙 _ 이중우선순위큐 (Swift)
+
+//코딩에 앞서, 간단한 문법 정리 split과 components
+
+let s = "Hello I'm Kyusok, Nice to meet you!"
+var result1 = s.split(separator: " ")
+print(result1)
+
+result1 = s.split { $0 == " "}  // 후행클로저 형식의 split
+print(result1)
+
+result1 = s.split { $0 == "s"}  //" "사이에 s를 집어넣으면 s를 기준으로 쪼개게 된다.
+print(result1)
+
+result1 = s.split { $0 == "S"} //S가 없으므로 쪼개는 작업을 하지 않음. 위에서 써놓은 문장 그대로가 나옴
+print(result1)
+
+let v = "Hello I'm Kyusok, Nice to meet you!"
+var result2 = s.components(separatedBy: " ")
+
+print(result2)
+
+// 아래는, 프로그래머스 고득점 Kit - 힙 _ 이중우선순위큐(Swift)의 풀이
+// 以下は、Programmers 高得点 Kit _ ヒープ _ 二重優先順位キューのswiftの解き方である。
+func solution(_ operations:[String]) -> [Int] {
+    var queue: [Int] = []
+    let operatingQueue = operations.map {$0.components(separatedBy:" ")}
+    
+    for operating in operatingQueue {
+        let operWord = operating[0]
+        let operNum = Int(operating[1])! //여기 조금 잘 이해가 안됨. 다시 구글링 해보면서 익혀야 댈듯함.
+        
+        switch operWord {
+        
+        case "I":
+            queue.append(operNum)
+        case "D":
+            if !queue.isEmpty {
+                if operNum == 1 {
+                    queue.sort {$0 > $1}
+                } else {
+                    queue.sort {$0 < $1}
+                }
+                queue.removeFirst()
+            }
+        default:
+            break
+        }
+    }
+    
+    return queue == [] ? [0, 0] : [queue.max()! , queue.min()!]
+}
+
+print(solution(["I 16", "D 1"]))  //[0, 0]이 출력되어야 정상
+print(solution(["I 7", "I 5", "I -5", "D -1"]))  //[7, 5]가 출력되어야 정상
+
+let str: String = "Lee Kyusok in Tokyo"
+let arr: [String] = str.components(separatedBy: " ")
+ 
+print(arr)    // ["Lee", "Kyusok", "in", "Tokyo"]
+print(arr[0]) // Lee
+print(arr[1]) // Kyusok
+print(arr[2]) // in
+print(arr[3]) // Tokyo
+//위의 문법 설명: 배열로 된것이 아닌 그냥 문자열의 타입String 을 상수로서 입력해주었을 떄, arr은 그 string 타입의 입력해준 문자열을 스페이스를 단위로 끊어주고 입력해준 순서대로 배열의 요소로서 가지게 된다. 즉, arr[0]은 Lee, arr[1]은 Kyusok.....
+
+var arr2 = arr.map {$0.components}
+print(arr2)
+//위의 문법 설명: 반면, mapping을 해줄때, 그냥 components로 맵핑을 해주게 되면, 배열안에 (function), (function)...이 요소수 만큼 대입되게 됨. 즉, 원하는대로의 알고리즘 설계가 안되었음.
+
+var arrayExample = ["Lee", "Kyusok", "in", "Japan", "LineDeveloper", "目指せ"]
+
+var arrayMapping = arrayExample.map {$0}
+print(arrayMapping)  //map은 그것을 배열로 나타내주는데, 이 때 괄호안에 $0만 붙이면, 배열 값 그대로의 것이 출력된다.
+//["Lee", "Kyusok", "in", "Japan", "LineDeveloper", "目指せ"]가 출력됨.
+
+//var arrayMapping2 = arrayExample.components(separatedBy:" ")
+//print(arrayMapping2)
+// 위의 문법이 Error 가 발생하는 이유: [String]에는 components라는 멤버가 없다. 즉 이 문법은 에러가 발생하게 됨.
+
+var arrayMapping3 = arrayExample.map {$0.components(separatedBy:" ")}
+print(arrayMapping3)
+// 이렇게되면, 배열안의 배열을 갖는 이중배열이 형성되게 된다.
+// [["Lee"], ["Kyusok"], ["in"], ["Japan"], ["LineDeveloper"], ["目指せ"]]가 출력됨
+
+let arrayExample2 = ["I 7", "I 5", "I -5", "D -1"]
+var arrayMapping4 = arrayExample2.map {$0.components(separatedBy:" ")}
+print(arrayMapping4)
