@@ -363,7 +363,7 @@ print(sortedArray3) //[[0, 1], [2, 4], [2, 5], [3, 2], [5, 7]] 출력됨
 // 추가적으로, <는 오름차순 정렬(ex):  0 >>> 3 >>>>> 7 >>> 10) >는 내림차순 정렬 (ex: 10 >>> 7 >>> 3 >> 0)
 
 //Day 10
-//Programmers High Score Kit - Heap _ディスクコントローラー (Swift)
+//Programmers High Score Kit - Heap _二重優先順位キュー (Swift)
 //프로그래머스 고득점 Kit - 힙 _ 이중우선순위큐 (Swift)
 
 //코딩에 앞서, 간단한 문법 정리 split과 components
@@ -452,3 +452,29 @@ print(arrayMapping3)
 let arrayExample2 = ["I 7", "I 5", "I -5", "D -1"]
 var arrayMapping4 = arrayExample2.map {$0.components(separatedBy:" ")}
 print(arrayMapping4)
+
+//Day 11
+//Programmers High Score Kit - sort _k番目の数 (Swift)
+//프로그래머스 고득점 Kit - 정령 _ k번째수 (Swift)
+
+// 問題説明：
+//  配列arrayのi番目の数字からj番目の数字まで切って整列したとき、k番目にある数を求めたいと思います。 例えば、arrayが[1、5、2、6、3、7、4]、i = 2、j = 5、k = 3 なら、 arrayの 2番目から 5番目まで切れば[5、2、6、3]です。 1から出た配列を並べ替えると、[2、3、5、6]です。 2から出た配列の3番目の数字は5です。
+// 配列array,[i、j、k]を元素とする2次元配列commandsが媒介変数として与えられるとき、commandsのすべての元素に対して先に説明した演算を適用したときに出た結果を配列に入れてreturnするようsolution関数を作成してください。
+
+func solution(_ array:[Int], _ commands:[[Int]]) -> [Int] {
+    var answer: [Int] = []
+    
+    for command in commands {
+        let i = command[0] - 1
+        let j = command[1] - 1
+        let k = command[2] - 1
+        
+        let number = Array(array[i...j]).sorted()[k]
+        answer.append(number)
+    }
+    
+    return answer
+}
+
+print(solution([1, 5, 2, 6, 3, 7, 4], [[2, 5, 3], [4, 4, 1], [1, 7, 3]]))
+
