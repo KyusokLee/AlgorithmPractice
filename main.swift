@@ -478,3 +478,101 @@ func solution(_ array:[Int], _ commands:[[Int]]) -> [Int] {
 
 print(solution([1, 5, 2, 6, 3, 7, 4], [[2, 5, 3], [4, 4, 1], [1, 7, 3]]))
 
+//다른 사람의 풀이 map 이용
+func solution1(_ array:[Int], _ commands:[[Int]]) -> [Int] {
+        return commands.map({(key) in
+            return array[(key[0]-1)...(key[1]-1)].sorted()[key[2] - 1]
+        })
+}
+
+print(solution1([1, 5, 2, 6, 3, 7, 4], [[2, 5, 3], [4, 4, 1], [1, 7, 3]]))
+
+// arrayのmap活用
+var array6 = [[1, 3, 5], [4, 7, 8], [3, 9, 10]]
+var array7 = [1, 5, 2, 6, 3, 7, 4]
+var arrayMapping6 = array6.map {$0}
+print(arrayMapping6)
+var array6Sorting = array6.map {$0[0]...$0[1]}
+print(array6Sorting)
+var array7Sorting = array7.sorted()
+//sorted뒤에 아무것도 안쓰고 그냥 괄호()만쓰면 자동적으로 오름차순으로 된다
+print(array7Sorting)
+var array6Sorting2 = array6.map {$0[2]}
+print(array6Sorting2)
+
+//Day 12
+//Programmers High Score Kit - sort _k番目の数 (Swift)
+//프로그래머스 고득점 Kit - 정령 _ k번째수 (Swift)
+//問題説明: 0または正の整数を与えられたとき、整数をつなげて作ることができる最大数を探し出してください。例えば、与えられた整数が[6、10、2]なら、[6102、6210、1062、1026、2610、2106]となり、このうち最大の数は6210です。0または正の整数が入った配列numbersが媒介変数として与えられるとき、順序を再配置して作ることができる最大の数を文字列に変えてreturnするようにsolution関数を作成してください。
+
+func solution(_ numbers:[Int]) -> String {
+    let result = numbers.sorted {
+        Int("\($0)\($1)")! > Int("\($1)\($0)")!
+    }
+//    let result = numbers.sorted {
+//        ("\($0)\($1)") > ("\($1)\($0)")
+//    } is also possible... What is difference?
+    
+    //위의 문법 설명: 먼저 입력해준 배열을 정렬해줄 필요가 있기에, sorted함수를 사용
+    //            문자열로 합쳐서 비교한 후에 재배치 형식으로 알고리즘을 풀었다
+    //            $0과 $1의 요소를 String형식으로 이어 붙일 때, 큰 값 순서대로 정렬해준다
+    // Int로 해준 이유:  예를 들어 9과 81 값이 있다면 "981" 과 "819" 를 만들어 Int 로 변환한 뒤의 값을 비교한기 위해
+    //          결과: 981이 더 크기 때문에 81이 9의 뒤로 정렬되게 된다.
+    
+    print(result)
+    
+    if result[0] == 0 {
+        return "0" //   Return Type 이 String이기에 따옴표 ""를 붙여준다. Swift는 Type에 굉장히 민감
+    }
+    
+
+    return result.reduce("") {$0 + "\($1)"}
+}
+
+// return result.reduce("") {$0 + "\($1)"}의 설명 :
+//   reduce뒤에 붙는 빈 괄호 () 안에는 초기값이 들어간다. 여기서 ""을 초기값으로 설정해줬으므로 $0에 초기값해준 것이 대입되었기에 전 요소를 돌면서 대입되는 $1도 또한 ""으로 맞춰줘야한다. ""으로 한 이유는 리턴타입이 String 이기 때문!
+
+print(solution([6, 10, 2]))
+print(solution([3, 30, 34, 5, 9]))
+print(solution([0, 0, 0]))
+print(solution([0, 1, 98]))
+
+let array04 = [9, 10, 4, 7, 8]
+let arrayResult = array04.sorted {("\($0)\($1)") > ("\($1)\($0)")}
+print(arrayResult)
+let sorted1 = arrayResult.reduce(0) {$0 + $1}
+print(sorted1)
+// この場合は、ただの全要素の合計を出力する。
+let sorted2 =  arrayResult.reduce("") {$0 + "\($1)"}
+print(sorted2)
+
+let string1 = "hello"
+let string2 = " there"
+var welcome = string1 + string2
+print(welcome)
+// ""안의 것이 출력된다. 즉, "hello there" 가 아닌 hello there가 출력.
+//swift에서는 쉽게 문자를 하나로 합칠 수가 있다.
+
+var putString: [String] = ["0", "4", "11"]
+let putStringReduce = putString.reduce("") {$0 + $1}
+print(putStringReduce) // 출력 : 0411 (큰 따옴표가 없어진 0411이 출력됨)
+
+var putInt1: [Int] = [0, 4, 11]
+let sorting1 = putInt1.sorted {
+    ("\($0)\($1)") > ("\($1)\($0)")
+}
+print(sorting1)
+
+var putString1: [String] = ["가드올리고", "나리", "담"]
+let sorting2 = putString1.sorted {
+    ("\($0)\($1)") > ("\($1)\($0)")
+}
+print(sorting2)
+
+
+
+//キーボードから入力を受け取る
+var num = readLine()!
+print(num)
+//한글은 한글자씩 입력받게 됨.
+
