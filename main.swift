@@ -501,11 +501,11 @@ var array6Sorting2 = array6.map {$0[2]}
 print(array6Sorting2)
 
 //Day 12
-//Programmers High Score Kit - sort _k番目の数 (Swift)
-//프로그래머스 고득점 Kit - 정령 _ k번째수 (Swift)
+//Programmers High Score Kit - sort _ 最も大きい数(Swift)
+//프로그래머스 고득점 Kit - 정렬 _ 가장 큰 수 (Swift)
 //問題説明: 0または正の整数を与えられたとき、整数をつなげて作ることができる最大数を探し出してください。例えば、与えられた整数が[6、10、2]なら、[6102、6210、1062、1026、2610、2106]となり、このうち最大の数は6210です。0または正の整数が入った配列numbersが媒介変数として与えられるとき、順序を再配置して作ることができる最大の数を文字列に変えてreturnするようにsolution関数を作成してください。
 
-func solution(_ numbers:[Int]) -> String {
+func solution2(_ numbers:[Int]) -> String {
     let result = numbers.sorted {
         Int("\($0)\($1)")! > Int("\($1)\($0)")!
     }
@@ -532,10 +532,10 @@ func solution(_ numbers:[Int]) -> String {
 // return result.reduce("") {$0 + "\($1)"}의 설명 :
 //   reduce뒤에 붙는 빈 괄호 () 안에는 초기값이 들어간다. 여기서 ""을 초기값으로 설정해줬으므로 $0에 초기값해준 것이 대입되었기에 전 요소를 돌면서 대입되는 $1도 또한 ""으로 맞춰줘야한다. ""으로 한 이유는 리턴타입이 String 이기 때문!
 
-print(solution([6, 10, 2]))
-print(solution([3, 30, 34, 5, 9]))
-print(solution([0, 0, 0]))
-print(solution([0, 1, 98]))
+print(solution2([6, 10, 2]))
+print(solution2([3, 30, 34, 5, 9]))
+print(solution2([0, 0, 0]))
+print(solution2([0, 1, 98]))
 
 let array04 = [9, 10, 4, 7, 8]
 let arrayResult = array04.sorted {("\($0)\($1)") > ("\($1)\($0)")}
@@ -575,4 +575,72 @@ print(sorting2)
 var num = readLine()!
 print(num)
 //한글은 한글자씩 입력받게 됨.
+
+//Day 13
+//Programmers High Score Kit - sort _ H-index(Swift) [概念がややこしく、混同しやすい]
+//프로그래머스 고득점 Kit - 정렬 _ H-Index (Swift) [Difficult To Understand]
+
+//문제설명: 어느 과학자의 H-Index를 나타내는 값인 h를 구하려고 합니다. 위키백과1에 따르면, H-Index는 다음과 같이 구합니다.
+
+//어떤 과학자가 발표한 논문 n편 중, h번 이상 인용된 논문이 h편 이상이고 나머지 논문이 h번 이하 인용되었다면 h의 최댓값이 이 과학자의 H-Index입니다.
+
+//어떤 과학자가 발표한 논문의 인용 횟수를 담은 배열 citations가 매개변수로 주어질 때, 이 과학자의 H-Index를 return 하도록 solution 함수를 작성해주세요.
+
+//(3, 0, 6, 1, 5) 의 경우를 차근차근 생각해보자!
+// 먼저 최댓값을 구하는 것이기에 내림차순으로 정렬해주려고 하였다. 정렬해주면, (6, 5, 3, 1, 0)이 됨.
+// 그 이후에 반복을 돌면서 생각해준다. 그전에, h는 절대, n을 넘을 수가 없다는 것을 알 수 있다. 또한, h는 요소 중 가장 큰 수보다 클 수가 없다. 그러므로, 배열의 count 값을 h로서 설정하여 for in 문으로 반복을 돌려주려고 했음. (6, 5, 3, 1, 0)의 경우 출력은 3이 되야 한다. 참고로, (100, 10)의 경우는 10이 될 것같지만, 출력은 2이다. 이유는, h번 이상 인용된 논문이 h편 이상이어야 되는데, 논문의 수는 고작 2편에 불과하기 때문에... (6, 6, 6, 6, 6)의 경우는 출력은 6이 아닌 5가 되야함. 100, 10의 경우와 6, 6, 6, 6, 6의 경우 둘다, index의 값과 가장큰 수와 관계없이 논문의 수가 출력이 되야함. (4, 4, 4, 4, 4)의 경우에는, 4가 출력! 요소 중 가장 큰 수의 값이 count수 이하일 경우에는 인덱스와 요소의 값과 관계가 있음. 이것을 if로 나눠서 return 시키는 것이 핵심이었다...뒤늦게 파악해버림..
+// index를 h로 설정하였으므로 for in 문에서 h는 0부터 위 배열의 count인 5미만까지 돌게됨.
+// h = 0인 경우, sortedArray[h] 는 6이됨. 인용 횟수가 0이상인 논문의 수는 5, 나머지 논문은 인용 횟수가 0 이하로 만족
+// h = 1인 경우, sortedArray[h] 는 5가됨. 인용 횟수가 1이상인 논문의 수는 4, 나머지 논문은 인용 횟수가 1 이하로 만족
+// h = 2인 경우, sortedArray[h] 는 3이됨. 인용 횟수가 2이상인 논문의 수는 3, 나머지 논문은 인용 횟수가 2 이하로 만족
+// h = 3인 경우, sortedArray[h] 는 1이됨. 인용 횟수가 3이상인 논문의 수는 3, 나머지 논문은 인용 횟수가 3 이하로 만족
+// h = 4인 경우, sortedArray[h] 는 0이됨. 인용 횟수가 4이상인 논문의 수는 2, 나머지 논문은 인용 횟수가 4 이하로 만족
+// 즉 내림차 순으로 정렬을 해줬기에, 자연스럽게 나머지 논문은 인덱스의 값을 가지는 인용횟수보다 이하이게 된다. h가 3일 때, 처음으로 인용횟수(인덱스) >= 논문의 수 가 된다.
+
+func solution(_ citations:[Int]) -> Int {
+    let sortedArray = citations.sorted(by: >)
+
+    for h in 0..<sortedArray.count {
+        if h >= sortedArray[h] {
+            return h
+        }
+    }
+    
+    
+    return sortedArray.count
+}
+
+print(solution([3, 0, 6, 1, 5]))
+
+// for in 문 공부용
+let forinPractice = [9, 0, 8, 4, 6]
+print(forinPractice.count)
+// 이랗게하면 count는 단지 요소의 수를 출력해준다. 요소는 5개이므로 5를 출력
+
+var putPractice = [Int]()
+let practiceSorting = forinPractice.sorted(by: >)
+
+
+//混同しそうなfor in 文法
+for j in 0..<practiceSorting.count {
+    putPractice.append(j)
+}
+//0..< practiceSorting.count를 하면, practiceSorting의 count인 5 미만의 수로 반복을 하게됨. 즉, 0 ~ 4까지만
+
+print(putPractice) // [0, 1, 2, 3, 4]를 출력!
+putPractice.removeAll()
+
+for k in 1...practiceSorting.count {
+    putPractice.append(k)
+}
+print(putPractice)
+
+//1...practiceSorting.count를 하면, 반복 index가 1부터 practiceSorting의 count인 5까지 반복을 하게됨. 즉, 1 ~ 5까지만
+putPractice.removeAll()
+
+for m in 1..<practiceSorting.count {
+    putPractice.append(m)
+}
+print(putPractice)
+//1..<practiceSorting.count를 하면, 반복 index가 1부터 practiceSorting의 count인 5미만의 수로 반복을 하게됨. 즉, 1 ~ 4까지만
 
