@@ -572,8 +572,8 @@ print(sorting2)
 
 
 //キーボードから入力を受け取る
-var num = readLine()!
-print(num)
+//var num = readLine()!
+//print(num)
 //한글은 한글자씩 입력받게 됨.
 
 //Day 13
@@ -644,3 +644,46 @@ for m in 1..<practiceSorting.count {
 print(putPractice)
 //1..<practiceSorting.count를 하면, 반복 index가 1부터 practiceSorting의 count인 5미만의 수로 반복을 하게됨. 즉, 1 ~ 4까지만
 
+//Day 14
+//Programmers High Score Kit - 力まかせ探索(Brute-Force) _ 模擬試験(Swift)
+//프로그래머스 고득점 Kit - 완전탐색 _ 모의고사 (Swift)
+
+func solution3(_ answers:[Int]) -> [Int] {
+    let stu1 = [1, 2, 3, 4, 5]
+    let stu2 = [2, 1, 2, 3, 2, 4, 2, 5]
+    let stu3 = [3, 3, 1, 1, 2, 2, 4, 4, 5, 5]
+    var result = [1 : 0, 2 : 0, 3 : 0]
+
+    for i in 0..<answers.count {
+        let indexStu1 = i % stu1.count //　作った配列の要素を無限に増やしていくのではなく、%演算子を使って作った配列の要素数を超えても配列をより効率的に繰り返す作業をさせる
+        let indexStu2 = i % stu2.count   // 上記のコメントと同じ
+        let indexStu3 = i % stu3.count   // 上記のコメントと同じ
+        
+        if answers[i] == stu1[indexStu1] {
+            result[1]! = (result[1] ?? 0) + 1
+        }
+        if answers[i] == stu2[indexStu2] {
+            result[2]! = (result[2] ?? 0) + 1
+        }
+        if answers[i] == stu2[indexStu3] {
+            result[3]! = (result[3] ?? 0) + 1
+        }
+    }
+
+    let stuMax = result.filter { $0.value == result.values.max() }.keys.sorted()
+    return stuMax
+}
+
+print(solution3([1,2,3,4,5]))
+print(solution3([1,3,2,4,2]))
+
+//Dictionary 活用練習
+
+var practiceDict = [1 : 7, 2 : 10, 3 : 10, 4 : 6]
+let dictFilter = practiceDict.filter {$0.value == practiceDict.values.max()}
+print(dictFilter)
+//こうすると、dictionaryのvalueの中で最も大きい値を持っているkeyとvalueが共に新しいdictionaryのtypeとして出力される。
+//もし、最大値を持っているkeyが２つあったら、後ろからのkeyが出力される。
+
+let dictFilter2 = practiceDict.filter { $0.value == practiceDict.values.max() }.keys.sorted()
+print(dictFilter2) //一方、こうすると、keyだけが出力される。
