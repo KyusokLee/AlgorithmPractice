@@ -655,22 +655,22 @@ func solution3(_ answers:[Int]) -> [Int] {
     var result = [1 : 0, 2 : 0, 3 : 0]
 
     for i in 0..<answers.count {
-        let indexStu1 = i % stu1.count //　作った配列の要素を無限に増やしていくのではなく、%演算子を使って作った配列の要素数を超えても配列をより効率的に繰り返す作業をさせる
-        let indexStu2 = i % stu2.count   // 上記のコメントと同じ
-        let indexStu3 = i % stu3.count   // 上記のコメントと同じ
-        
-        if answers[i] == stu1[indexStu1] {
-            result[1]! = (result[1] ?? 0) + 1
+        //　i % stu1.count をする理由：
+        //作った配列の要素を無限に増やしていくのではなく、% 演算子を使って作った配列の要素数を超えても配列をより効率的に繰り返す作業をさせるため
+        if answers[i] == stu1[i % stu1.count] {
+            result[1]! += 1
         }
-        if answers[i] == stu2[indexStu2] {
-            result[2]! = (result[2] ?? 0) + 1
+        if answers[i] == stu2[i % stu2.count] {
+            result[2]! += 1
         }
-        if answers[i] == stu2[indexStu3] {
-            result[3]! = (result[3] ?? 0) + 1
+        if answers[i] == stu3[i % stu3.count] {
+            result[3]! += 1
         }
     }
-
-    let stuMax = result.filter { $0.value == result.values.max() }.keys.sorted()
+    
+    let maxNum = result.values.max()
+    let stuMax = result.filter { $0.value == maxNum }.keys.sorted()
+    
     return stuMax
 }
 
